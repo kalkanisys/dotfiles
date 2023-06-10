@@ -22,6 +22,7 @@ Available options:
 -h, --help      Print this help and exit
 -l, --list      List all available services
 --stop-all      Stop all running services
+--running       List all running services
 -r, --readme    Print the service readme for quick reference
 
 Examples:
@@ -105,6 +106,26 @@ stop_all() {
     exit
 }
 
+# list all running services
+list_running() {
+    local services=()
+    for service in "${services_dir}"/*; do
+        services+=("$(basename "${service}")")
+    done
+
+    # list all running services using docker-compose
+    for service in "${services[@]}"; do
+        if [[ -f "${services_dir}/${service}/compose.yml" ]]; then
+            # list only if service is running
+            if [[ "$(docker-compose -f "${services_dir}/${service}/compose.yml" ps -q)" != "" ]]; then
+                msg "${BLUE}${service}${NOFORMAT}"
+            fi
+        fi
+    done
+
+    exit
+}
+
 setup_colors
 
 # If no arguments are passed then print usage
@@ -125,6 +146,12 @@ fi
 # first param is --stop-all then stop all services
 if [[ "${1-}" =~ ^(--stop-all)$ ]]; then
     stop_all
+    exit
+fi
+
+# first param is --running then list all running services
+if [[ "${1-}" =~ ^(--running)$ ]]; then
+    list_running
     exit
 fi
 
