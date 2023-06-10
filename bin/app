@@ -21,6 +21,7 @@ Available options:
 
 -h, --help      Print this help and exit
 -l, --list      List all available services
+--stop-all      Stop all running services
 -r, --readme    Print the service readme for quick reference
 
 Examples:
@@ -35,7 +36,7 @@ To list all available services
 
 To print the service readme
 
-    $ $(basename "${BASH_SOURCE[0]}") -r
+    $ $(basename "${BASH_SOURCE[0]}") postgres11 -r
 
 EOF
     exit
@@ -83,6 +84,27 @@ list_services() {
     exit
 }
 
+# stop all running services
+stop_all() {
+    local services=()
+    for service in "${services_dir}"/*; do
+        services+=("$(basename "${service}")")
+    done
+
+    # stop all services using docker-compose
+    for service in "${services[@]}"; do
+        if [[ -f "${services_dir}/${service}/compose.yml" ]]; then
+            # stop only if service is running
+            if [[ "$(docker-compose -f "${services_dir}/${service}/compose.yml" ps -q)" != "" ]]; then
+                msg "${BLUE}Stopping ${service}...${NOFORMAT}"
+                docker-compose -f "${services_dir}/${service}/compose.yml" down
+            fi
+        fi
+    done
+
+    exit
+}
+
 setup_colors
 
 # If no arguments are passed then print usage
@@ -97,6 +119,12 @@ fi
 # first param is -l or --list then list all services
 if [[ "${1-}" =~ ^(-l|--list)$ ]]; then
     list_services
+    exit
+fi
+
+# first param is --stop-all then stop all services
+if [[ "${1-}" =~ ^(--stop-all)$ ]]; then
+    stop_all
     exit
 fi
 

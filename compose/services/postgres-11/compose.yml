@@ -1,6 +1,3 @@
-# Add docker compose for postgresql
-# Path: compose/services/postgresql.yaml
-
 version: "3"
 
 networks:
