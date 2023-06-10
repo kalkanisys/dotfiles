@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+#
+# Run all dotfiles installers.
+
+set -e
+
+cd "$(dirname $0)"/..
+
+# find the installers and run them iteratively
+find . -name install.ext.sh | while read installer; do bash -e ${installer}; done
+
+exit 0

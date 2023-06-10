@@ -1,0 +1,3 @@
+#!/bin/bash
+# Show what is new since last tag 
+git log $(git describe --tags --abbrev=0)..HEAD --oneline

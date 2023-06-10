@@ -1,0 +1,3 @@
+#!/bin/bash
+# Show tags list with date and subject
+git for-each-ref --sort=-creatordate --format="%(align:width=15)%(refname:short)%(end) | %(align:width=30)%(creatordate)%(end) | %(subject)" "refs/tags/*"

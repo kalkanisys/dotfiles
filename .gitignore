@@ -1,0 +1,10 @@
+git/gitconfig.local.symlink
+
+# Custom files to customize the dotfiles further without
+# tracking in git
+zlocal-*.zsh
+
+# Hidden scripts such as .pure-prompts.zsh
+# are not auto confugured, they need to be executed manually
+# You can enable them by making a symlink to zlocal*.zsh in
+# the same directory
