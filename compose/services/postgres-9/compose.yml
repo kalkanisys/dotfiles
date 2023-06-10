@@ -1,0 +1,23 @@
+version: "3"
+
+networks:
+  developer:
+    external: true
+
+volumes:
+  postgres-9:
+
+services:
+  postgres-9:
+    image: postgres:11-alpine
+    container_name: postgres-9
+    ports:
+      - "10009:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+    volumes:
+      - postgres-9:/var/lib/postgresql/data
+    networks:
+      - developer
