@@ -24,5 +24,3 @@ elif test "$(expr substr $(uname -s) 1 5)" = "Linux"; then
         jq \
         bashtop
 fi
-
-exit 0

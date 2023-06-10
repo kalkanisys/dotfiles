@@ -1,22 +1,22 @@
 # If no .fzf directory then exit
 if [[ ! -d "$HOME/.fzf" ]]; then
-    exit 0
+
+    # Setup fzf
+    # ---------/
+    if [[ ! "$PATH" == *:$HOME/.fzf/bin* ]]; then
+        export PATH="${PATH:+${PATH}:}$HOME/.fzf/bin"
+    fi
+
+    # Auto-completion
+    # ---------------
+    [[ $- == *i* ]] && source "$HOME/.fzf/shell/completion.zsh" 2>/dev/null
+
+    # Key bindings
+    # ------------
+    source "$HOME/.fzf/shell/key-bindings.zsh"
+
+    export FZF_DEFAULT_COMMAND='fd --type file --follow --hidden --exclude .git'
+    export FZF_ALT_C_COMMAND='fd -t d -d 10 --follow --exclude .git'
+    export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+
 fi
-
-# Setup fzf
-# ---------/
-if [[ ! "$PATH" == *:$HOME/.fzf/bin* ]]; then
-    export PATH="${PATH:+${PATH}:}$HOME/.fzf/bin"
-fi
-
-# Auto-completion
-# ---------------
-[[ $- == *i* ]] && source "$HOME/.fzf/shell/completion.zsh" 2>/dev/null
-
-# Key bindings
-# ------------
-source "$HOME/.fzf/shell/key-bindings.zsh"
-
-export FZF_DEFAULT_COMMAND='fd --type file --follow --hidden --exclude .git'
-export FZF_ALT_C_COMMAND='fd -t d -d 10 --follow --exclude .git'
-export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"

@@ -4,5 +4,3 @@ if test "$(uname)" = "Darwin"; then
 elif test "$(expr substr $(uname -s) 1 5)" = "Linux"; then
     echo "Installing core installers for Linux"
 fi
-
-exit 0

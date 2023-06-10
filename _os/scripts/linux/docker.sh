@@ -8,5 +8,3 @@ if [ ! -f /etc/apt/sources.list.d/docker.list ]; then
 else
     sudo apt install -y docker-ce docker-ce-cli docker-ce-rootless-extras docker-compose-plugin docker-buildx-plugin docker-scan-plugin
 fi
-
-exit 0
