@@ -92,13 +92,13 @@ stop_all() {
         services+=("$(basename "${service}")")
     done
 
-    # stop all services using docker-compose
+    # stop all services using docker compose
     for service in "${services[@]}"; do
         if [[ -f "${services_dir}/${service}/compose.yml" ]]; then
             # stop only if service is running
-            if [[ "$(docker-compose -f "${services_dir}/${service}/compose.yml" ps -q)" != "" ]]; then
+            if [[ "$(docker compose -f "${services_dir}/${service}/compose.yml" ps -q)" != "" ]]; then
                 msg "${BLUE}Stopping ${service}...${NOFORMAT}"
-                docker-compose -f "${services_dir}/${service}/compose.yml" down
+                docker compose -f "${services_dir}/${service}/compose.yml" down
             fi
         fi
     done
@@ -113,11 +113,11 @@ list_running() {
         services+=("$(basename "${service}")")
     done
 
-    # list all running services using docker-compose
+    # list all running services using docker compose
     for service in "${services[@]}"; do
         if [[ -f "${services_dir}/${service}/compose.yml" ]]; then
             # list only if service is running
-            if [[ "$(docker-compose -f "${services_dir}/${service}/compose.yml" ps -q)" != "" ]]; then
+            if [[ "$(docker compose -f "${services_dir}/${service}/compose.yml" ps -q)" != "" ]]; then
                 msg "${BLUE}${service}${NOFORMAT}"
             fi
         fi

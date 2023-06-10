@@ -12,15 +12,15 @@ elif test "$(expr substr $(uname -s) 1 5)" = "Linux"; then
         git \
         screen \
         restic \
+        openssh-server \
         bc \
         lnav \
         bash \
         zsh \
         nano \
         tree \
-        iftop \
         htop \
         rsync \
         jq \
-        bashtop
+        ufw
 fi

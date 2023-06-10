@@ -12,12 +12,13 @@ elif test "$(expr substr $(uname -s) 1 5)" = "Linux"; then
         make \
         dbus-user-session \
         uidmap \
-        openssh-server \
         net-tools \
         libgconf-2-4 \
         git-cola \
         python2.7 python3 \
         byobu \
         bat \
-        ufw
+        iftop \
+        bashtop \
+        ack-grep
 fi
