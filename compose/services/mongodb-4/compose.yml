@@ -1,0 +1,25 @@
+# Add docker compose for postgresql
+# Path: compose/services/postgresql.yaml
+
+version: "3"
+
+networks:
+  developer:
+    external: true
+
+volumes:
+  mongodb-4:
+
+services:
+  mongodb-4:
+    image: "mongo:4.2-bionic"
+    container_name: mongodb-4
+    ports:
+      - "10104:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=mongodb
+      - MONGO_INITDB_ROOT_PASSWORD=mongodb
+    volumes:
+      - mongodb-4:/data/db
+    networks:
+      - developer

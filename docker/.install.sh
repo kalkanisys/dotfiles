@@ -1,7 +1,10 @@
 # Install docker rootless if docker is globally installed
+set -e
 
 dockerd-rootless-setuptool.sh install
 systemctl --user enable docker
+
+touch ~/.localrc
 
 # Add docker sock to ~/.localrc of not already present
 if ! grep -q "DOCKER_HOST" ~/.localrc; then

@@ -18,5 +18,6 @@ elif test "$(expr substr $(uname -s) 1 5)" = "Linux"; then
         git-cola \
         python2.7 python3 \
         byobu \
+        bat \
         ufw
 fi
