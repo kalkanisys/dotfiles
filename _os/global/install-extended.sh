@@ -5,16 +5,11 @@ elif test "$(expr substr $(uname -s) 1 5)" = "Linux"; then
     sudo apt update -y
     sudo apt install -y \
         apt-transport-https \
-        git-flow \
         gnupg \
-        autoconf \
-        build-essential \
-        make \
         dbus-user-session \
         uidmap \
         net-tools \
         libgconf-2-4 \
-        git-cola \
         python2.7 python3 \
         byobu \
         bat \
