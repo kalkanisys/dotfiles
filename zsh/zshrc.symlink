@@ -1,3 +1,6 @@
+# Zsh pre block. Keep at the top of this file.
+[[ -f "$HOME/.zsh/zshrc.pre.zsh" ]] && . "$HOME/.zsh/zshrc.pre.zsh"
+
 # Fig pre block. Keep at the top of this file.
 [[ -f "$HOME/.fig/shell/zshrc.pre.zsh" ]] && . "$HOME/.fig/shell/zshrc.pre.zsh"
 # shortcut to this dotfiles path is $ZSHDOT
@@ -5,14 +8,6 @@ export ZSHDOT=$HOME/.dotfiles
 
 # your project folder that we can `c [tab]` to
 export PROJECTS=~/code
-
-# Stash your environment variables in ~/.localrc. This means they'll stay out
-# of your main dotfiles repository (which may be public, like this one), but
-# you'll have access to them in your scripts.
-if [[ -a ~/.localrc ]]
-then
-  source ~/.localrc
-fi
 
 # all of our zsh files
 typeset -U config_files
@@ -42,6 +37,14 @@ done
 
 unset config_files
 
+# Stash your environment variables in ~/.localrc. This means they'll stay out
+# of your main dotfiles repository (which may be public, like this one), but
+# you'll have access to them in your scripts.
+if [[ -a ~/.localrc ]]
+then
+  source ~/.localrc
+fi
+
 # Better history
 # Credits to https://coderwall.com/p/jpj_6q/zsh-better-history-searching-with-arrow-keys
 # autoload -U up-line-or-beginning-search
@@ -50,6 +53,9 @@ unset config_files
 # zle -N down-line-or-beginning-search
 # bindkey "^[[A" up-line-or-beginning-search # Up
 # bindkey "^[[B" down-line-or-beginning-search # Down
+
+# Zsh post block. Keep at the bottom of this file.
+[[ -f "$HOME/.zsh/zshrc.post.zsh" ]] && . "$HOME/.zsh/zshrc.post.zsh"
 
 # Fig post block. Keep at the bottom of this file.
 [[ -f "$HOME/.fig/shell/zshrc.post.zsh" ]] && . "$HOME/.fig/shell/zshrc.post.zsh"

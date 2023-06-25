@@ -1,0 +1,36 @@
+#!/bin/bash
+
+# Script is used to find file with matching pattern mostly to find pre and post
+# hook files from .extra directory to extend dotfiles repo
+
+# Check if the directory and pattern arguments are provided
+if [[ $# -ne 2 ]]; then
+    echo "Usage: $0 <directory> <pattern>"
+    exit 1
+fi
+
+# Assign the directory and pattern arguments to variables
+directory="$1"
+pattern="$2"
+
+# Get the absolute path of the directory
+absolute_directory=$(realpath "$directory")
+
+# Find the first matching file in the specified directory
+matching_file=$(find "$absolute_directory" -type f -name "$pattern" -perm -u+x -print -quit)
+
+# If DEBUG env is set print file and exit
+# Check if DEBUG environment variable is set
+if [[ -n "$DEBUG" ]]; then
+    echo "Matching file: $matching_file"
+    exit 0
+fi
+
+# Check if a matching file was found and is executable
+if [[ -n "$matching_file" ]]; then
+    # Change to the directory containing the matching file
+    cd "$(dirname "$matching_file")" || exit 1
+
+    # Execute the matching file
+    "./$(basename "$matching_file")"
+fi
