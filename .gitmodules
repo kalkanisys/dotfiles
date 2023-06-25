@@ -1,3 +1,0 @@
-[submodule ".extras/pure"]
-	path = .extras/pure
-	url = https://github.com/sindresorhus/pure.git

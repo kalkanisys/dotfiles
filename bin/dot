@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 #
 # dot
 #
@@ -41,27 +41,21 @@ done
 export ZSHDOT=$HOME/.dotfiles
 
 # Set macOS defaults
-$ZSHDOT/macos/set-defaults.sh
+# $ZSHDOT/macos/set-defaults.sh
 
 # Install homebrew
-$ZSHDOT/homebrew/install.sh 2>&1
+# $ZSHDOT/homebrew/install.sh 2>&1
 
 # Upgrade homebrew
-echo "› brew update"
-brew update
+# echo "› brew update"
+# brew update
 
-# Find first matching file if exists then execute it.
-if [[ -f "$ZSHDOT/.extras/dot.pre-install.sh" ]]; then
-	echo "› $ZSHDOT/.extras/dot.pre-install.sh"
-	$ZSHDOT/.extras/dot.pre-install.sh
-fi
-
-# Zsh pre block for dot install.
-[[ -f "$ZSHDOT/.extras/dot.pre-install.sh" ]] && . "$ZSHDOT/.extras/dot.pre-install.sh"
+# Zsh pre block for dot pre install.
+$ZSHDOT/script/hook $ZSHDOT/.extras "dot.pre-install.sh"
 
 # Install software
 echo "› $ZSHDOT/script/install"
 $ZSHDOT/script/install
 
-# Zsh pre block for dot install.
-[[ -f "$ZSHDOT/.extras/dot.post-install.sh" ]] && . "$ZSHDOT/.extras/dot.post-install.sh"
+# Zsh post block for dot post install.
+$ZSHDOT/script/hook $ZSHDOT/.extras "dot.post-install.sh"

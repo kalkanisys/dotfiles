@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Script is used to find file with matching pattern mostly to find pre and post
 # hook files from .extra directory to extend dotfiles repo
@@ -16,12 +16,20 @@ pattern="$2"
 # Get the absolute path of the directory
 absolute_directory=$(realpath "$directory")
 
-# Find the first matching file in the specified directory
-matching_file=$(find "$absolute_directory" -type f -name "$pattern" -perm -u+x -print -quit)
+# # Set directories to ignore during search
+# ignore_directories=".git node_modules vendor $HOOK_IGNORE"
+
+# # Convert ignore directories to find's -path option format
+# ignore_directories_formatted=$(echo "$ignore_directories" | sed -e 's/\w*/-path ".\/&" -o/g' -e 's/-$//')
+
+# # Find the first matching file in the specified directory, ignoring specific directories
+# matching_file=$(find "$absolute_directory" \( $ignore_directories_formatted \) -prune -o -type f -name "$pattern" -perm -u+x -print -quit)
+
+matching_file=$(find "$absolute_directory" -type d \( -name ".git" -o -name "node_modules" -o -name "vendor" \) -prune -o -type f -name "$pattern" -perm -u+x -print -quit)
 
 # If DEBUG env is set print file and exit
 # Check if DEBUG environment variable is set
-if [[ -n "$DEBUG" ]]; then
+if [[ -n "$DEBUG_HOOK" ]]; then
     echo "Matching file: $matching_file"
     exit 0
 fi
