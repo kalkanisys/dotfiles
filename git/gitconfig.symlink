@@ -7,6 +7,8 @@
         a = add . -p
         co = checkout
         promote = !$ZSHDOT/bin/git-promote
+        wtf     = !$ZSHDOT/bin/git-wtf
+        rank-contributors = !$ZSHDOT/bin/git-rank-contributors
         count   = !git shortlog -sn
 [color]
         diff = auto

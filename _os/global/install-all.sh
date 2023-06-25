@@ -8,6 +8,7 @@ cd "$(dirname $0)"/../..
 
 bash -e "_os/global/install-core.sh"
 bash -e "_os/global/install-extended.sh"
+bash -e "_os/global/install-development.sh"
 
 # Install browsers
 bash -e "_os/scripts/linux/google-chrome.sh"
@@ -23,7 +24,7 @@ bash -e "_os/scripts/linux/vscode.sh"
 bash -e "_os/scripts/linux/sublime.sh"
 bash -e "_os/scripts/linux/nodejs.sh"
 bash -e "_os/scripts/linux/php.sh"
-bash -e "_os/scripts/linux/git-cola.sh"
+bash -e "_os/scripts/linux/git-ext.sh"
 
 #!/usr/bin/env bash
 #
