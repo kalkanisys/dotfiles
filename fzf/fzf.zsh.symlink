@@ -15,8 +15,8 @@ if [[ -d "$HOME/.fzf" ]]; then
     # ------------
     source "$HOME/.fzf/shell/key-bindings.zsh"
 
-    export FZF_DEFAULT_COMMAND='fd --type file --follow --hidden --exclude .git'
-    export FZF_ALT_C_COMMAND='fd -t d -d 10 --follow --exclude .git'
+    export FZF_DEFAULT_COMMAND='fdfind --type file --follow --hidden --exclude .git'
+    export FZF_ALT_C_COMMAND='fdfind -t d -d 10 --follow --exclude .git'
     export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
 fi

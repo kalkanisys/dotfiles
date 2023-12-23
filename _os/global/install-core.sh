@@ -22,5 +22,6 @@ elif test "$(expr substr $(uname -s) 1 5)" = "Linux"; then
         htop \
         rsync \
         jq \
+        fd-find \
         ufw
 fi
