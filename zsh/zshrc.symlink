@@ -64,4 +64,6 @@ unset config_files
 [[ -f "$HOME/.fig/shell/zshrc.post.zsh" ]] && . "$HOME/.fig/shell/zshrc.post.zsh"
 
 # Zsh post block. Keep at the top of this file.
-[[ -f "$ZSHDOT/.extras/zshrc.post.sh" ]] && . "$ZSHDOT/.extras/zshrc.post.sh"
+if [[ -f "$ZSHDOT/.extras/zshrc.post.sh" ]]; then
+  . "$ZSHDOT/.extras/zshrc.post.sh"
+fi
