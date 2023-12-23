@@ -40,15 +40,20 @@ done
 
 export ZSHDOT=$HOME/.dotfiles
 
-# Set macOS defaults
-# $ZSHDOT/macos/set-defaults.sh
+if test "$(uname)" = "Darwin"; then   
+	# Set macOS defaults
+	$ZSHDOT/macos/set-defaults.sh
 
-# Install homebrew
-# $ZSHDOT/homebrew/install.sh 2>&1
+	# Install homebrew
+	$ZSHDOT/homebrew/install.sh 2>&1
 
-# Upgrade homebrew
-# echo "› brew update"
-# brew update
+	# Upgrade homebrew
+	echo "› brew update"
+	brew update
+elif test "$(expr substr $(uname -s) 1 5)" = "Linux"; then
+	echo "› apt update"
+	sudo apt update -y
+fi
 
 # Zsh pre block for dot pre install.
 $ZSHDOT/script/hook $ZSHDOT/.extras "dot.pre-install.sh"

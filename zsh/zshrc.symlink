@@ -1,6 +1,11 @@
 # shortcut to this dotfiles path is $ZSHDOT
 export ZSHDOT=$HOME/.dotfiles
 
+# To add additional modules to have personal customization without forking 
+# main dotfiles you can do 
+#   1. Clone your override module as .extras at root directory of dotfiles repo
+#   2. You can hse pre or post hooks to execute pre or post upstream bootstrap script
+
 # Zsh pre block. Keep at the top of this file.
 [[ -f "$ZSHDOT/.extras/zshrc.pre.sh" ]] && . "$ZSHDOT/.extras/zshrc.pre.sh"
 

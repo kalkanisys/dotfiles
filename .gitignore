@@ -142,4 +142,15 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
+# Folder that extends the common dotfiles
 .extras/
+
+# Ignoring shadow install files.
+# Where .install.sh file is present install.sh is ignored in gitignore so that
+# whoever is using the dotfiles can enable it by making install.sh file as a symlink to .install.sh
+cargo/install.sh
+docker/install.sh
+
+# Ignoring shadow path files.
+pnpm/path.zsh
+yarn/path.zsh
