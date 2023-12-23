@@ -1,5 +1,5 @@
-# If no .fzf directory then exit
-if [[ ! -d "$HOME/.fzf" ]]; then
+# If .fzf directory then only configure
+if [[ -d "$HOME/.fzf" ]]; then
 
     # Setup fzf
     # ---------/
