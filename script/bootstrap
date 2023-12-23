@@ -132,8 +132,13 @@ install_dotfiles() {
   done
 }
 
+# Uses code folder to keep all projects git repos in following structure
+# code/<name-of-project-or-company>/<name-of-repo>
 mkdir -p ~/code
 mkdir -p ~/.documents
+
+# Uses projects folder to keep all projects documents and notes in following structure
+# projects/<name-of-project-or-company>/
 mkdir -p ~/projects
 
 setup_gitconfig

@@ -1,7 +1,16 @@
-# Fig pre block. Keep at the top of this file.
-[[ -f "$HOME/.fig/shell/zshrc.pre.zsh" ]] && . "$HOME/.fig/shell/zshrc.pre.zsh"
 # shortcut to this dotfiles path is $ZSHDOT
 export ZSHDOT=$HOME/.dotfiles
+
+# To add additional modules to have personal customization without forking 
+# main dotfiles you can do 
+#   1. Clone your override module as .extras at root directory of dotfiles repo
+#   2. You can hse pre or post hooks to execute pre or post upstream bootstrap script
+
+# Zsh pre block. Keep at the top of this file.
+[[ -f "$ZSHDOT/.extras/zshrc.pre.sh" ]] && . "$ZSHDOT/.extras/zshrc.pre.sh"
+
+# Fig pre block. Keep at the top of this file.
+[[ -f "$HOME/.fig/shell/zshrc.pre.zsh" ]] && . "$HOME/.fig/shell/zshrc.pre.zsh"
 
 # your project folder that we can `c [tab]` to
 export PROJECTS=~/code
@@ -16,7 +25,8 @@ fi
 
 # all of our zsh files
 typeset -U config_files
-config_files=($ZSHDOT/**/*.zsh)
+config_files=($ZSHDOT/**/*.zsh $ZSHDOT/.extras/**/*.zsh(N))
+# config_files=($ZSHDOT/**/*.zsh)
 
 # load the path files
 for file in ${(M)config_files:#*/path.zsh}
@@ -53,3 +63,8 @@ unset config_files
 
 # Fig post block. Keep at the bottom of this file.
 [[ -f "$HOME/.fig/shell/zshrc.post.zsh" ]] && . "$HOME/.fig/shell/zshrc.post.zsh"
+
+# Zsh post block. Keep at the top of this file.
+if [[ -f "$ZSHDOT/.extras/zshrc.post.sh" ]]; then
+  . "$ZSHDOT/.extras/zshrc.post.sh"
+fi

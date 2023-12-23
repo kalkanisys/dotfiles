@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 #
 # dot
 #
@@ -7,8 +7,8 @@
 
 set -e
 
-parentDirectory="$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd -P)"
-dotfilesDirectory="$(cd "$( dirname "$parentDirectory" )" && pwd -P)"
+parentDirectory="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
+dotfilesDirectory="$(cd "$(dirname "$parentDirectory")" && pwd -P)"
 
 displayUsageAndExit() {
 	echo "dot -- dotfiles management"
@@ -23,33 +23,44 @@ displayUsageAndExit() {
 
 while test $# -gt 0; do
 	case "$1" in
-		"-h"|"--help")
-			displayUsageAndExit
-			;;
-		"-e"|"--edit")
-			exec "$EDITOR" "$dotfilesDirectory"
-			exit
-			;;
-		*)
-			echo "Invalid option: $1"
-			displayUsageAndExit
-			;;
+	"-h" | "--help")
+		displayUsageAndExit
+		;;
+	"-e" | "--edit")
+		exec "$EDITOR" "$dotfilesDirectory"
+		exit
+		;;
+	*)
+		echo "Invalid option: $1"
+		displayUsageAndExit
+		;;
 	esac
 	shift
 done
 
-export ZSH=$HOME/.dotfiles
+export ZSHDOT=$HOME/.dotfiles
 
-# Set macOS defaults
-$ZSH/macos/set-defaults.sh
+if test "$(uname)" = "Darwin"; then   
+	# Set macOS defaults
+	$ZSHDOT/macos/set-defaults.sh
 
-# Install homebrew
-$ZSH/homebrew/install.sh 2>&1
+	# Install homebrew
+	$ZSHDOT/homebrew/install.sh 2>&1
 
-# Upgrade homebrew
-echo "› brew update"
-brew update
+	# Upgrade homebrew
+	echo "› brew update"
+	brew update
+elif test "$(expr substr $(uname -s) 1 5)" = "Linux"; then
+	echo "› apt update"
+	sudo apt update -y
+fi
+
+# Zsh pre block for dot pre install.
+$ZSHDOT/script/hook $ZSHDOT/.extras "dot.pre-install.sh"
 
 # Install software
-echo "› $ZSH/script/install"
-$ZSH/script/install
+echo "› $ZSHDOT/script/install"
+$ZSHDOT/script/install
+
+# Zsh post block for dot post install.
+$ZSHDOT/script/hook $ZSHDOT/.extras "dot.post-install.sh"

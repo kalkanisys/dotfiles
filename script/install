@@ -6,5 +6,5 @@ set -e
 
 cd "$(dirname $0)"/..
 
-# find the installers and run them iteratively
+# find the installers and run them iteratively. (Run all installers)
 find . -name install.sh | while read installer ; do sh -c "${installer}" ; done
