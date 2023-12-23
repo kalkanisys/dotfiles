@@ -67,7 +67,17 @@ battery_status() {
   fi
 }
 
-export PROMPT=$'\n$(directory_name) $(git_dirty)$(need_push)\n› '
+host='%n'
+
+if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
+  if [ "$color_prompt" = yes ]; then
+      host+="@\[\033[1;34m\]%m\[\033[00m\]"
+  else
+      host+="@%m"
+  fi
+fi
+
+export PROMPT=$'\n${host} $(directory_name) $(git_dirty)$(need_push)\n› '
 set_prompt () {
   export RPROMPT="%{$fg_bold[cyan]%}%{$reset_color%}"
 }
