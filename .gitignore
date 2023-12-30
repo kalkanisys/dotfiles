@@ -143,7 +143,7 @@ dist
 .pnp.*
 
 # Folder that extends the common dotfiles
-.extras/
+.extras
 
 # Ignoring shadow install files.
 # Where .install.sh file is present install.sh is ignored in gitignore so that
