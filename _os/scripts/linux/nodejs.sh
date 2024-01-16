@@ -18,7 +18,7 @@ sudo apt-get update
 sudo apt-get install -y nodejs
 
 # npm upgrade
-sudo npm install -g npm@latest
+# sudo npm install -g npm@latest
 
 # Install node globals
 sudo npm install -g prettier eslint yarn zx npkill pnpm @jsdevtools/version-bump-prompt pino-pretty tldr
