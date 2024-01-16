@@ -26,6 +26,9 @@ bash -e "_os/scripts/linux/nodejs.sh"
 bash -e "_os/scripts/linux/php.sh"
 bash -e "_os/scripts/linux/git-ext.sh"
 
+# Global configuration
+bash -e "_os/scripts/linux/configure-ssh.sh"
+
 #!/usr/bin/env bash
 #
 # Run all dotfiles installers.
