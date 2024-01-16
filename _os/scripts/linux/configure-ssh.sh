@@ -6,16 +6,18 @@
 #    exit 1
 # fi
 
+SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")";
+
 # SSH configuration file
 sshd_config="/etc/ssh/sshd_config"
 
-sudo cp conf/ssh-secure.conf /etc/ssh/sshd_config.d/ssh-secure.conf
+sudo cp "$SCRIPT_DIR/conf/ssh-secure.conf" /etc/ssh/sshd_config.d/ssh-secure.conf
 sudo chmod 644 /etc/ssh/sshd_config.d/ssh-secure.conf
 
 # Create /etc/ssh/authorized_keys and make it readonly
 sudo touch /etc/ssh/authorized_keys
 sudo chmod 444 /etc/ssh/authorized_keys
-sudo mkdir /etc/ssh/keys/
+sudo mkdir -p /etc/ssh/keys/
 
 CURRENT_USER=$(whoami)
 # Copy current user's authorized_keys if exists
