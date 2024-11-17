@@ -1,8 +1,9 @@
 # Run if it is linux
-if [[ "$(expr substr $(uname -s) 1 5)" == "Linux" ]]; then
+if [[ "$(uname -s)" == "Linux" ]]; then
 
+    BREWDIR="$(dirname $0)"
     # Install brew bundle based on brewfile in current directory
-    brew bundle --file $HOME/.dotfiles/linuxbrew/Brewfile
+    brew bundle --file $BREWDIR/Brewfile
 
     # Update and Upgrade
     echo "Updating and upgrading Homebrew..."

@@ -4,7 +4,7 @@ set -e
 
 echo "Updating ssh configuration"
 
-if [[ "$(expr substr $(uname -s) 1 5)" == "Linux" ]]; then
+if [[ "$(uname -s)" == "Linux" ]]; then
 
     SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")"
 

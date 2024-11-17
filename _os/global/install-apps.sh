@@ -6,7 +6,7 @@ set -e
 
 cd "$(dirname $0)"/../..
 
-if [[ "$(expr substr $(uname -s) 1 5)" == "Linux" ]]; then
+if command -v expr &>/dev/null && [[ "$(uname -s)" == "Linux" ]]; then
     echo "Installing apps Linux"
 
     # Install browsers
@@ -48,9 +48,9 @@ elif [[ "$(uname)" == "Darwin" ]]; then
 
     brew install node@22 php tailscale
 
-    brew install --cask \
-        google-chrome brave-browser \
-        firefox firefox@developer-edition
+    # brew install --cask \
+    #     google-chrome brave-browser \
+    #     firefox firefox@developer-edition
 
     brew install --cask docker
 

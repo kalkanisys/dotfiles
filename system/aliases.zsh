@@ -36,8 +36,8 @@ alias docker-compose='docker compose $*'
 
 # croc
 # alias croc=croc --pass YOURPASSWORD --relay "myreal.example.com:9009"
-alias send=croc send
-alias receive=croc receive
+alias send='croc send'
+alias receive='croc receive'
 
 if command -v thefuck &>/dev/null; then
   # ---- TheFuck -----

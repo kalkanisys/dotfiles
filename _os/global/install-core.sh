@@ -3,7 +3,7 @@
 
 set -e
 
-if [[ "$(expr substr $(uname -s) 1 5)" == "Linux" ]]; then
+if command -v expr &>/dev/null && [[ "$(uname -s)" == "Linux" ]]; then
     echo "Installing core installers for Linux"
     sudo apt update -y
     sudo apt install -y \

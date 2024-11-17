@@ -19,7 +19,7 @@ if [[ ! -f "$HOME/.zsh_prompt" ]]; then
   # Zsh prompt block. Keep at the top of this file.
   if [[ -f "$ZSHDOT/.user/zsh-prompt.sh" ]]; then
     source "$ZSHDOT/.user/zsh-prompt.sh"
-  elif [[ -f "$HOME/.pure" ]]; then
+  elif [[ -d "$HOME/.pure" ]]; then
     source "$ZSHDOT/zsh/pure-prompt.sh"
   else
     source "$ZSHDOT/zsh/simple-prompt.sh"

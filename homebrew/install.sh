@@ -1,8 +1,9 @@
 # Run if it is linux
 if [[ "$(uname)" == "Darwin" ]]; then
 
+    BREWDIR="$(dirname $0)"
     # Install brew bundle based on brewfile in current directory
-    brew bundle --file $HOME/.dotfiles/homebrew/Brewfile
+    brew bundle --file $BREWDIR/Brewfile
 
     # Update and Upgrade
     echo "Updating and upgrading Homebrew..."

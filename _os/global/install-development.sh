@@ -6,7 +6,7 @@ set -e
 
 cd "$(dirname $0)"/../..
 
-if [[ "$(expr substr $(uname -s) 1 5)" == "Linux" ]]; then
+if [[ "$(uname -s)" == "Linux" ]]; then
     echo "Installing development installers for Linux"
 
     sudo apt update -y

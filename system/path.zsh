@@ -32,7 +32,9 @@ if command -v fzf &>/dev/null; then
         fd --type=d -d 10 --hidden --exclude .git . "$1"
     }
 
-    source ~/fzf-git.sh/fzf-git.sh
+    if [[ -f ~/.fzf-git/fzf-git.sh ]]; then
+        source ~/.fzf-git/fzf-git.sh
+    fi
 
     show_file_or_dir_preview="if [ -d {} ]; then eza --tree --color=always {} | head -200; else bat -n --color=always --line-range :500 {}; fi"
 
@@ -53,4 +55,5 @@ if command -v fzf &>/dev/null; then
         *) fzf --preview "$show_file_or_dir_preview" "$@" ;;
         esac
     }
+
 fi
