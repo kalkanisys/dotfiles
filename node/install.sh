@@ -1,14 +1,21 @@
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | PROFILE=/dev/null bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | PROFILE=/dev/null bash
 
 NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
+[[ -s "$NVM_DIR/nvm.sh" ]] && \. "$NVM_DIR/nvm.sh" # This loads nvm
 
-if test $(which nvm); then
-  nvm install --lts
+# Add prettier yarn pnpm packages to $NVM_DIR/default-packages file, if exists then override, in one line
+if [[ -d $NVM_DIR ]]; then
+  cat <<EOF >$NVM_DIR/default-packages
+prettier
+eslint
+yarn
+pnpm
+npm-check-updates
+@jsdevtools/version-bump-prompt
+EOF
 fi
 
-if test $(which nvm); then
-  npm i -g npm@latest
-  npm install -g prettier eslint yarn zx serve pnpm npm-check-updates tldr watch @jsdevtools/version-bump-prompt
-# @devcontainers/cli
+# If nvm is install then install latest nvm
+if command -v nvm &>/dev/null; then
+  nvm install --lts --latest-npm
 fi

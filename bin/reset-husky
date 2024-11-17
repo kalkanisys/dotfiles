@@ -1,1 +1,0 @@
-unset HUSKY && echo "Husky reset"

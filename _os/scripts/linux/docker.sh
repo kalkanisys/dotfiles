@@ -1,5 +1,11 @@
+#!/usr/bin/env bash
+
+set -e
+
+echo "Installing docker"
+
 # Install docker
-if [ ! -f /etc/apt/sources.list.d/docker.list ]; then
+if [[ ! -f /etc/apt/sources.list.d/docker.list ]]; then
     sudo apt-get update -y
     curl -fsSL https://get.docker.com -o /tmp/get-docker.sh
     sudo sh /tmp/get-docker.sh

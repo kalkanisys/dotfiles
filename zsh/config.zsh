@@ -3,7 +3,6 @@ export CLICOLOR=true
 
 fpath=($ZSHDOT/functions $fpath)
 
-
 autoload -U $ZSHDOT/functions/*(:t)
 
 HISTFILE=~/.zsh_history
@@ -17,6 +16,8 @@ setopt LOCAL_OPTIONS # allow functions to have local options
 setopt LOCAL_TRAPS # allow functions to have local traps
 setopt HIST_VERIFY
 setopt SHARE_HISTORY # share history between sessions ???
+setopt HIST_EXPIRE_DUPS_FIRST
+setopt HIST_IGNORE_DUPS
 setopt EXTENDED_HISTORY # add timestamps to history
 setopt PROMPT_SUBST
 setopt CORRECT

@@ -1,4 +1,8 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
+set -e
+
+echo "Installing teamviewer"
 
 # Remote URL to download the TeamViewer Debian package
 TEAMVIEWER_URL="https://download.teamviewer.com/download/linux/teamviewer_amd64.deb"

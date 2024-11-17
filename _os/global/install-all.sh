@@ -7,27 +7,10 @@ set -e
 cd "$(dirname $0)"/../..
 
 bash -e "_os/global/install-core.sh"
-bash -e "_os/global/install-extended.sh"
 bash -e "_os/global/install-development.sh"
+bash -e "_os/global/install-apps.sh"
 
-# Install browsers
-bash -e "_os/scripts/linux/google-chrome.sh"
-bash -e "_os/scripts/linux/firefox.sh"
-bash -e "_os/scripts/linux/brave.sh"
-
-# Install docker
-bash -e "_os/scripts/linux/docker.sh"
-bash -e "_os/scripts/linux/docker-compose.sh"
-
-# Install development tools
-bash -e "_os/scripts/linux/vscode.sh"
-bash -e "_os/scripts/linux/sublime.sh"
-bash -e "_os/scripts/linux/nodejs.sh"
-bash -e "_os/scripts/linux/php.sh"
-bash -e "_os/scripts/linux/git-ext.sh"
-
-# Global configuration
-bash -e "_os/scripts/linux/configure-ssh.sh"
+echo "Installation of global dependencies complete"
 
 #!/usr/bin/env bash
 #
@@ -43,5 +26,5 @@ bash -e "_os/scripts/linux/configure-ssh.sh"
 #     echo "nothing to install for now"
 # elif test "$(expr substr $(uname -s) 1 5)" = "Linux"; then
 #     sudo apt update -y
-#     find _os/scripts/ -name *.sh | while read installer; do bash -e ${installer}; done
+#     find _os/scripts -name *.sh | while read installer; do bash -e ${installer}; done
 # fi

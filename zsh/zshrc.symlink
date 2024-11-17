@@ -3,17 +3,8 @@ export ZSHDOT=$HOME/.dotfiles
 
 # To add additional modules to have personal customization without forking 
 # main dotfiles you can do 
-#   1. Clone your override module as .extras at root directory of dotfiles repo
+#   1. Clone your override module as .user at root directory of dotfiles repo
 #   2. You can hse pre or post hooks to execute pre or post upstream bootstrap script
-
-# Zsh pre block. Keep at the top of this file.
-[[ -f "$ZSHDOT/.extras/zshrc.pre.sh" ]] && . "$ZSHDOT/.extras/zshrc.pre.sh"
-
-# Fig pre block. Keep at the top of this file.
-[[ -f "$HOME/.fig/shell/zshrc.pre.zsh" ]] && . "$HOME/.fig/shell/zshrc.pre.zsh"
-
-# your project folder that we can `c [tab]` to
-export PROJECTS=~/code
 
 # Stash your environment variables in ~/.localrc. This means they'll stay out
 # of your main dotfiles repository (which may be public, like this one), but
@@ -23,9 +14,33 @@ then
   source ~/.localrc
 fi
 
+# If ZSHDOT_PROMPT is not set then run custom code
+if [[ ! -f "$HOME/.zsh_prompt" ]]; then
+  # Zsh prompt block. Keep at the top of this file.
+  if [[ -f "$ZSHDOT/.user/zsh-prompt.sh" ]]; then
+    source "$ZSHDOT/.user/zsh-prompt.sh"
+  elif [[ -f "$HOME/.pure" ]]; then
+    source "$ZSHDOT/zsh/pure-prompt.sh"
+  else
+    source "$ZSHDOT/zsh/simple-prompt.sh"
+  fi
+else
+  source "$HOME/.zsh_prompt"
+fi
+
+
+# Zsh pre block. Keep at the top of this file.
+[[ -f "$ZSHDOT/.user/zshrc.pre.sh" ]] && . "$ZSHDOT/.user/zshrc.pre.sh"
+
+# Fig pre block. Keep at the top of this file.
+[[ -f "$HOME/.fig/shell/zshrc.pre.zsh" ]] && . "$HOME/.fig/shell/zshrc.pre.zsh"
+
+# your project folder that we can `c [tab]` to
+export PROJECTS=~/code
+
 # all of our zsh files
 typeset -U config_files
-config_files=($ZSHDOT/**/*.zsh $ZSHDOT/.extras/**/*.zsh(N))
+config_files=($ZSHDOT/**/*.zsh $ZSHDOT/.user/**/*.zsh(N))
 # config_files=($ZSHDOT/**/*.zsh)
 
 # load the path files
@@ -54,17 +69,14 @@ unset config_files
 
 # Better history
 # Credits to https://coderwall.com/p/jpj_6q/zsh-better-history-searching-with-arrow-keys
-# autoload -U up-line-or-beginning-search
-# autoload -U down-line-or-beginning-search
-# zle -N up-line-or-beginning-search
-# zle -N down-line-or-beginning-search
-# bindkey "^[[A" up-line-or-beginning-search # Up
-# bindkey "^[[B" down-line-or-beginning-search # Down
+autoload -U up-line-or-beginning-search
+autoload -U down-line-or-beginning-search
+zle -N up-line-or-beginning-search
+zle -N down-line-or-beginning-search
+bindkey "^[[A" up-line-or-beginning-search # Up
+bindkey "^[[B" down-line-or-beginning-search # Down
 
 # Fig post block. Keep at the bottom of this file.
 [[ -f "$HOME/.fig/shell/zshrc.post.zsh" ]] && . "$HOME/.fig/shell/zshrc.post.zsh"
 
-# Zsh post block. Keep at the top of this file.
-if [[ -f "$ZSHDOT/.extras/zshrc.post.sh" ]]; then
-  . "$ZSHDOT/.extras/zshrc.post.sh"
-fi
+[[ -f "$ZSHDOT/.user/zshrc.post.sh" ]] && . "$ZSHDOT/.user/zshrc.post.sh"

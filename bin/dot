@@ -51,16 +51,16 @@ if test "$(uname)" = "Darwin"; then
 	echo "› brew update"
 	brew update
 elif test "$(expr substr $(uname -s) 1 5)" = "Linux"; then
-	echo "› apt update"
-	sudo apt update -y
+	echo "› apt upgrade"
+	sudo apt update -y && sudo apt upgrade -y
 fi
 
 # Zsh pre block for dot pre install.
-$ZSHDOT/script/hook $ZSHDOT/.extras "dot.pre-install.sh"
+$ZSHDOT/script/hook $ZSHDOT/.user "dot.pre-install.sh"
 
 # Install software
 echo "› $ZSHDOT/script/install"
 $ZSHDOT/script/install
 
 # Zsh post block for dot post install.
-$ZSHDOT/script/hook $ZSHDOT/.extras "dot.post-install.sh"
+$ZSHDOT/script/hook $ZSHDOT/.user "dot.post-install.sh"

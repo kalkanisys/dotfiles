@@ -10,6 +10,7 @@ zlocal-*.zsh
 # the same directory
 
 tmp/
+.DS_Store
 
 # Logs
 logs
@@ -143,7 +144,9 @@ dist
 .pnp.*
 
 # Folder that extends the common dotfiles
-.extras
+/.user
+/.modules
+# .extras
 
 # Ignoring shadow install files.
 # Where .install.sh file is present install.sh is ignored in gitignore so that

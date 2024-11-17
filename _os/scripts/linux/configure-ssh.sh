@@ -1,30 +1,32 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# Check if the script is run as root
-# if [[ $EUID -ne 0 ]]; then
-#    echo "This script must be run as root."
-#    exit 1
-# fi
+set -e
 
-SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")";
+echo "Updating ssh configuration"
 
-# SSH configuration file
-sshd_config="/etc/ssh/sshd_config"
+if [[ "$(expr substr $(uname -s) 1 5)" == "Linux" ]]; then
 
-sudo cp "$SCRIPT_DIR/conf/ssh-secure.conf" /etc/ssh/sshd_config.d/ssh-secure.conf
-sudo chmod 644 /etc/ssh/sshd_config.d/ssh-secure.conf
+    SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")"
 
-# Create /etc/ssh/authorized_keys and make it readonly
-sudo touch /etc/ssh/authorized_keys
-sudo chmod 444 /etc/ssh/authorized_keys
-sudo mkdir -p /etc/ssh/keys/
+    # SSH configuration file
+    sshd_config="/etc/ssh/sshd_config"
 
-CURRENT_USER=$(whoami)
-# Copy current user's authorized_keys if exists
-if [ -f "/home/$CURRENT_USER/.ssh/authorized_keys" ]; then
-    sudo cp /home/$CURRENT_USER/.ssh/authorized_keys /etc/ssh/keys/$CURRENT_USER.authorized_keys
-    sudo chmod 644 /etc/ssh/keys/$CURRENT_USER.authorized_keys
+    sudo cp "$SCRIPT_DIR/conf/ssh-secure.conf" /etc/ssh/sshd_config.d/ssh-secure.conf
+    sudo chmod 644 /etc/ssh/sshd_config.d/ssh-secure.conf
+
+    # Create /etc/ssh/authorized_keys and make it readonly
+    sudo touch /etc/ssh/authorized_keys
+    sudo chmod 444 /etc/ssh/authorized_keys
+    sudo mkdir -p /etc/ssh/keys/
+
+    CURRENT_USER=$(whoami)
+    # Copy current user's authorized_keys if exists, and /etc/ssh/keys does not have file already
+    if [[ -f "/home/$CURRENT_USER/.ssh/authorized_keys" && ! -f "/etc/ssh/keys/$CURRENT_USER.authorized_keys" ]]; then
+        sudo cp /home/$CURRENT_USER/.ssh/authorized_keys /etc/ssh/keys/$CURRENT_USER.authorized_keys
+        sudo chmod 644 /etc/ssh/keys/$CURRENT_USER.authorized_keys
+    fi
+
+    # Restart SSH service
+    sudo systemctl restart ssh.service
+
 fi
-
-# Restart SSH service
-sudo systemctl restart ssh.service
