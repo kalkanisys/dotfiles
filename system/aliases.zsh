@@ -42,8 +42,8 @@ alias receive='croc receive'
 if command -v thefuck &>/dev/null; then
   # ---- TheFuck -----
   # thefuck alias
-  eval $(thefuck --alias)
-  eval $(thefuck --alias fk)
+  # eval $(thefuck --alias)
+  eval "$(thefuck --alias fk)"
 fi
 
 if command -v zoxide &>/dev/null; then

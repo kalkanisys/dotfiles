@@ -57,3 +57,45 @@ if command -v fzf &>/dev/null; then
     }
 
 fi
+
+# NodeJS
+if [[ -d "$HOME/.nvm" ]]; then
+    export NVM_DIR="$HOME/.nvm"
+    [[ -s "$NVM_DIR/nvm.sh" ]] && \. "$NVM_DIR/nvm.sh" $NVM_STARTUP_OPS                   # This loads nvm
+    # [[ -s "$NVM_DIR/bash_completion" ]] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion
+fi
+
+if command -v yarn &>/dev/null; then
+    export PATH="$PATH:$(yarn global bin)"
+fi
+
+if command -v pnpm &>/dev/null; then
+    export PATH="$PATH:$(pnpm bin)"
+fi
+
+# Homebrew
+if [[ -d /opt/homebrew/bin ]]; then
+    # --- Homebrew ---
+    # Add brew to path
+    eval $(/opt/homebrew/bin/brew shellenv)
+
+    [[ -d /opt/homebrew/share/zsh-autosuggestions ]] && source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+fi
+
+# Linuxbrew
+if [[ -d $HOME/.linuxbrew/bin ]]; then
+    # --- Homebrew ---
+    # Add brew to path
+    eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)
+
+    [[ -d $HOME/.linuxbrew/share/zsh-autosuggestions ]] && source $HOME/.linuxbrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+
+fi
+
+# Navi
+export NAVI_CONFIG="$HOME/.navi.yaml"
+export NAVI_PATH="$ZSHDOT/navi:$ZSHDOT/.user/navi"
+
+if command -v navi &>/dev/null; then
+    eval "$(navi widget zsh)"
+fi

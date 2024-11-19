@@ -1,6 +1,8 @@
 # shortcut to this dotfiles path is $ZSHDOT
 export ZSHDOT=$HOME/.dotfiles
 
+# zmodload zsh/zprof
+
 # To add additional modules to have personal customization without forking 
 # main dotfiles you can do 
 #   1. Clone your override module as .user at root directory of dotfiles repo
@@ -56,8 +58,8 @@ do
 done
 
 # initialize autocomplete here, otherwise functions won't be loaded
-autoload -U compinit
-compinit
+autoload -Uz compinit
+compinit -C
 
 # load every completion after autocomplete loads
 for file in ${(M)config_files:#*/completion.zsh}
@@ -80,3 +82,5 @@ bindkey "^[[B" down-line-or-beginning-search # Down
 [[ -f "$HOME/.fig/shell/zshrc.post.zsh" ]] && . "$HOME/.fig/shell/zshrc.post.zsh"
 
 [[ -f "$ZSHDOT/.user/zshrc.post.sh" ]] && . "$ZSHDOT/.user/zshrc.post.sh"
+
+# zprof

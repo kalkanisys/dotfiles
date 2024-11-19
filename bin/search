@@ -5,8 +5,10 @@
 set -e
 
 # use -iru to search directories ack usually ignores (like .git)
-if [[ -x /usr/bin/ack-grep ]]; then
+if command -v ack-grep &>/dev/null ; then
     ack-grep -i "$@"
+elif command -v rg &>/dev/null ; then
+    rg -i "$@"
 else
     ack -i "$@"
 fi

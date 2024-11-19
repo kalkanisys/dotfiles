@@ -16,4 +16,5 @@ brew "thefuck"
 brew "lazygit"
 brew "dive"
 brew "croc"
-
+brew "zsh-autosuggestions"
+brew "navi"

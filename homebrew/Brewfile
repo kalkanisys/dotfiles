@@ -1,6 +1,5 @@
 tap "homebrew/bundle"
 
-brew "ack"
 brew "age"
 brew "byobu"
 brew "midnight-commander"
@@ -21,6 +20,8 @@ brew "thefuck"
 brew "lazygit"
 brew "dive"
 brew "croc"
+brew "zsh-autosuggestions"
+brew "navi"
 
 # cask "balsamiq-wireframes"
 cask "numi"
