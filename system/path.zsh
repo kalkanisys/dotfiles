@@ -96,6 +96,6 @@ fi
 export NAVI_CONFIG="$HOME/.navi.yaml"
 export NAVI_PATH="$ZSHDOT/navi:$ZSHDOT/.user/navi"
 
-if command -v navi &>/dev/null; then
-    eval "$(navi widget zsh)"
-fi
+# if command -v navi &>/dev/null; then
+#     eval "$(navi widget zsh)"
+# fi
