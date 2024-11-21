@@ -4,6 +4,7 @@ brew "age"
 brew "byobu"
 brew "midnight-commander"
 brew "step"
+brew "dotenvx/brew/dotenvx"
 
 brew "bat"
 brew "fd"

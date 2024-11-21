@@ -12,6 +12,7 @@ yarn
 pnpm
 npm-check-updates
 @jsdevtools/version-bump-prompt
+tsx
 EOF
 fi
 
