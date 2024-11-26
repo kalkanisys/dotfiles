@@ -1,0 +1,36 @@
+#!/bin/bash
+
+# Check for required arguments
+if [ "$#" -lt 1 ]; then
+    echo "Usage: gh-release <tag_name>"
+    exit 1
+fi
+
+TAG_NAME=$1
+RELEASE_TITLE=$1
+NOTES_FILE="/tmp/release-notes-$(date +%s%N).md" # Random suffix using timestamp and nanoseconds
+
+# Open the editor for multiline notes
+echo "Write your release notes. Save and exit to continue."
+${EDITOR:-nano} "$NOTES_FILE"
+
+# Check if the user saved notes
+if [ ! -s "$NOTES_FILE" ]; then
+    echo "Release notes are empty. Aborting."
+    rm -f "$NOTES_FILE"
+    exit 1
+fi
+
+if [ "$#" -ge 2 ]; then
+    ATTACHMENT=$2
+else
+    ATTACHMENT=""
+fi
+
+# Create the GitHub release
+gh release create "$TAG_NAME" $ATTACHMENT --title "$RELEASE_TITLE" --notes-file "$NOTES_FILE" --generate-notes
+
+# Clean up the notes file
+rm "$NOTES_FILE"
+
+echo "Release created for tag '$TAG_NAME' with title '$RELEASE_TITLE'."
