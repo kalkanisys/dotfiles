@@ -1,16 +1,21 @@
 #!/bin/bash
 
 # Check if dmidecode is installed, and install it if missing
-if ! command -v dmidecode &> /dev/null; then
-    echo "dmidecode is not installed. Installing it now..."
-    sudo apt update && sudo apt install -y dmidecode
+if ! command -v dmidecode &>/dev/null; then
+    echo "dmidecode is not installed. Installing it now silently..."
+    sudo apt update -qq && sudo apt install -y dmidecode >/dev/null 2>&1
 fi
 
 # CPU hostname, username, and IP address
 hostname=$(hostname)
 username=$(whoami)
 ip_address=$(hostname -I | awk '{for (i=1; i<=NF; i++) if ($i ~ /^192\.168/) print $i}')
-echo "Machine: $username@$hostname | IP: $ip_address"
+echo "Machine: $username@$hostname | IP: $ip_address | Type: $machine_type"
+
+# OS Version and Information
+os_info=$(lsb_release -d | awk -F: '{print $2}' | sed 's/^[ \t]*//')
+kernel_version=$(uname -r)
+echo "OS: $os_info | Kernel: $kernel_version"
 
 # CPU Information
 cpu_model=$(lscpu | grep "Model name:" | awk -F: '{print $2}' | sed 's/^[ \t]*//')
@@ -26,11 +31,28 @@ ram_sticks=$(sudo dmidecode --type memory | grep -c "Locator")
 echo "RAM: ${total_ram} GB | Model: $ram_model | Count: $ram_sticks"
 
 # Harddisk Information
-disk_info=$(lsblk -o NAME,SIZE,MODEL,TYPE | grep -E 'disk|nvme' | awk '{print $1 " (" $2 "GB) - " $3}')
-disk_total_size=$(lsblk -d -b -o SIZE | grep -E '^[0-9]' | awk '{sum += $1} END {print sum / (1024^3)}')
-disk_free_space=$(df -BG --total | grep total | awk '{print $4}')
-disk_type=$(lsblk -d -o NAME,ROTA | grep -E 'sd|nvme' | awk '{if ($2 == 0) print "SSD"; else print "HDD"}' | head -n 1)
-echo "Disk: $disk_info | Size: ${disk_total_size} GB | Free Space: $disk_free_space | Disk Type: $disk_type"
+# disk_info=$(lsblk -o NAME,SIZE,MODEL,TYPE | grep -E 'disk|nvme' | awk '{print $1 " (" $2 "GB) - " $3}')
+# disk_total_size=$(lsblk -d -b -o SIZE | grep -E '^[0-9]' | awk '{sum += $1} END {print sum / (1024^3)}')
+# disk_free_space=$(df -BG --total | grep total | awk '{print $4}')
+# disk_type=$(lsblk -d -o NAME,ROTA | grep -E 'sd|nvme' | awk '{if ($2 == 0) print "SSD"; else print "HDD"}' | head -n 1)
+# echo "Disk: $disk_info | Size: ${disk_total_size} GB | Free Space: $disk_free_space | Disk Type: $disk_type"
+
+# Harddisk Information (All Drives)
+lsblk -b -o NAME,SIZE,MODEL,TYPE,ROTA,MOUNTPOINT,FSAVAIL | grep -E 'disk|nvme' | while read -r line; do
+    disk_name=$(echo $line | awk '{print $1}')
+    disk_size=$(echo $line | awk '{print $2}')
+    disk_size_gb=$(echo "scale=2; $disk_size / (1024^3)" | bc) # Convert bytes to GB
+    disk_model=$(echo $line | awk '{print $3}')
+    disk_type=$(echo $line | awk '{if ($4 == "0") print "SSD"; else print "HDD"}')
+    mount_point=$(echo $line | awk '{print $5}')
+    free_space=$(echo $line | awk '{print $6}')
+    if [[ -z "$free_space" ]]; then
+        free_space="Not Mounted"
+    else
+        free_space="${free_space} GB"
+    fi
+    echo "Disk: $disk_name | Size: ${disk_size_gb} GB | Free: $free_space" GB | Model: $disk_model | Type: $disk_type
+done
 
 # Motherboard Information
 motherboard=$(sudo dmidecode -t baseboard | grep -m 1 "Product Name:" | awk -F: '{print $2}' | sed 's/^[ \t]*//')
