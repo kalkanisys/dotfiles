@@ -12,11 +12,19 @@ if ! command -v dmidecode &>/dev/null; then
     sudo apt update -qq && sudo apt install -y dmidecode >/dev/null 2>&1
 fi
 
+# Machine Type: Laptop or Desktop
+machine_type=$(sudo dmidecode -s chassis-type | head -n 1)
+if [[ -z "$machine_type" ]]; then
+    machine_type="Unknown"
+fi
+
 # CPU hostname, username, and IP address
 hostname=$(hostname)
 username=$(whoami)
+product_name=$(sudo dmidecode -s system-product-name 2>/dev/null)
+vendor_name=$(sudo dmidecode -s system-manufacturer 2>/dev/null)
 ip_address=$(hostname -I | awk '{for (i=1; i<=NF; i++) if ($i ~ /^192\.168/) print $i}')
-echo "Machine: $username@$hostname | IP: $ip_address | Type: $machine_type"
+echo "Machine: $username@$hostname | IP: $ip_address | Type: $machine_type | Vendor: $vendor_name | Product: $product_name"
 
 # OS Version and Information
 os_info=$(lsb_release -d | awk -F: '{print $2}' | sed 's/^[ \t]*//')
@@ -27,8 +35,7 @@ echo "OS: $os_info | Kernel: $kernel_version"
 cpu_model=$(lscpu | grep "Model name:" | awk -F: '{print $2}' | sed 's/^[ \t]*//')
 cpu_cores=$(lscpu | grep "^CPU(s):" | awk -F: '{print $2}' | sed 's/^[ \t]*//')
 cpu_threads=$(lscpu | grep "Thread(s) per core:" | awk -F: '{print $2}' | sed 's/^[ \t]*//')
-cpu_clock=$(lscpu | grep "CPU MHz:" | awk -F: '{print $2}' | sed 's/^[ \t]*//')
-echo "CPU: $cpu_model | Cores: $cpu_cores | Threads: $((cpu_cores * cpu_threads)) | Clock: ${cpu_clock} MHz"
+echo "CPU: $cpu_model | Cores: $cpu_cores | Threads: $((cpu_cores * cpu_threads))"
 
 # RAM Information
 total_ram=$(free -g | grep Mem: | awk '{print $2}')
@@ -37,7 +44,7 @@ ram_sticks=$(sudo dmidecode --type memory | grep -i "Size:" | grep -v "No Module
 ram_type=$(sudo dmidecode --type memory | grep -m 1 -A 10 "Memory Device" | grep "Type:" | grep -v "Unknown" | awk -F: '{print $2}' | sed 's/^[ \t]*//')
 ram_speed=$(sudo dmidecode --type memory | grep -A16 "Memory Device" | grep -i "Speed:" | awk -F: '{print $2}' | grep -Eo '[0-9]+' | sort -u)
 
-echo "RAM: ${total_ram} GB | Model: $ram_model | Count: $ram_sticks | Type: $ram_type | Speed: $ram_speed MHz"
+echo "RAM: ${total_ram} GB | Type: $ram_type | Speed: $ram_speed MHz | Count: $ram_sticks | Model: $ram_model"
 
 # Harddisk Information
 # disk_info=$(lsblk -o NAME,SIZE,MODEL,TYPE | grep -E 'disk|nvme' | awk '{print $1 " (" $2 "GB) - " $3}')
@@ -47,13 +54,20 @@ echo "RAM: ${total_ram} GB | Model: $ram_model | Count: $ram_sticks | Type: $ram
 # echo "Disk: $disk_info | Size: ${disk_total_size} GB | Free Space: $disk_free_space | Disk Type: $disk_type"
 
 # Harddisk Information (All Drives)
-lsblk -b -o NAME,SIZE,MODEL,TYPE,ROTA,MOUNTPOINT | grep -E 'disk|nvme' | while read -r line; do
+lsblk -b -d -o NAME,SIZE,MODEL,ROTA | grep -E 'disk|nvme' | while read -r line; do
     disk_name=$(echo "$line" | awk '{print $1}')
     disk_size=$(echo "$line" | awk '{print $2}')
     disk_size_gb=$(echo "scale=2; $disk_size / (1024^3)" | bc) # Convert bytes to GB
     disk_model=$(echo "$line" | awk '{print $3}')
-    disk_type=$(echo "$line" | awk '{if ($4 == "0") print "SSD"; else print "HDD"}')
-    echo "Disk: $disk_name | Size: ${disk_size_gb} GB | Model: $disk_model | Type: $disk_type"
+    disk_rota=$(echo "$line" | awk '{print $4}')
+    disk_type=$(if [[ "$disk_rota" == "0" ]]; then echo "SSD"; else echo "HDD"; fi)
+
+    # Fallback for missing or blank model
+    if [[ -z "$disk_model" || "$disk_model" == "-" ]]; then
+        disk_model=$(udevadm info --query=all --name=/dev/$disk_name | grep "ID_MODEL=" | awk -F= '{print $2}')
+    fi
+
+    echo "Disk: $disk_name | Size: ${disk_size_gb} GB | Model: ${disk_model:-Unknown} | Type: $disk_type"
 done
 
 # Calculate Free Space of Root Partition (`/`)
