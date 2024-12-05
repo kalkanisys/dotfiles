@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# Ensure the script runs with sudo privileges
+if [ "$EUID" -ne 0 ]; then
+    echo "This script requires sudo privileges. Please enter your password."
+    sudo -v || { echo "sudo is required. Exiting."; exit 1; }
+fi
+
 # Check if dmidecode is installed, and install it if missing
 if ! command -v dmidecode &>/dev/null; then
     echo "dmidecode is not installed. Installing it now silently..."
