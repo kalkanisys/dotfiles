@@ -23,7 +23,7 @@ echo ""
 # CPU hostname, username, and IP address
 hostname=$(hostname)
 username=$(whoami)
-ip_address=$(hostname -I | awk '{for (i=1; i<=NF; i++) if ($i ~ /^192\.168/) print $i}')
+ip_address=$(hostname -I | awk '{for (i=1; i<=NF; i++) if ($i ~ /^192\.168/) {print $i; exit}}')
 echo "Machine: $username@$hostname | IP: $ip_address | Type: $machine_type"
 
 # CPU Information
