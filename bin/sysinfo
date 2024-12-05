@@ -1,0 +1,37 @@
+#!/bin/bash
+
+# Check if dmidecode is installed, and install it if missing
+if ! command -v dmidecode &> /dev/null; then
+    echo "dmidecode is not installed. Installing it now..."
+    sudo apt update && sudo apt install -y dmidecode
+fi
+
+# CPU hostname, username, and IP address
+hostname=$(hostname)
+username=$(whoami)
+ip_address=$(hostname -I | awk '{for (i=1; i<=NF; i++) if ($i ~ /^192\.168/) print $i}')
+echo "Machine: $username@$hostname | IP: $ip_address"
+
+# CPU Information
+cpu_model=$(lscpu | grep "Model name:" | awk -F: '{print $2}' | sed 's/^[ \t]*//')
+cpu_cores=$(lscpu | grep "^CPU(s):" | awk -F: '{print $2}' | sed 's/^[ \t]*//')
+cpu_threads=$(lscpu | grep "Thread(s) per core:" | awk -F: '{print $2}' | sed 's/^[ \t]*//')
+cpu_clock=$(lscpu | grep "CPU MHz:" | awk -F: '{print $2}' | sed 's/^[ \t]*//')
+echo "CPU: $cpu_model | Cores: $cpu_cores | Threads: $((cpu_cores * cpu_threads)) | Clock: ${cpu_clock} MHz"
+
+# RAM Information
+total_ram=$(free -g | grep Mem: | awk '{print $2}')
+ram_model=$(sudo dmidecode --type memory | grep -m 1 "Part Number:" | awk -F: '{print $2}' | sed 's/^[ \t]*//')
+ram_sticks=$(sudo dmidecode --type memory | grep -c "Locator")
+echo "RAM: ${total_ram} GB | Model: $ram_model | Count: $ram_sticks"
+
+# Harddisk Information
+disk_info=$(lsblk -o NAME,SIZE,MODEL,TYPE | grep -E 'disk|nvme' | awk '{print $1 " (" $2 "GB) - " $3}')
+disk_total_size=$(lsblk -d -b -o SIZE | grep -E '^[0-9]' | awk '{sum += $1} END {print sum / (1024^3)}')
+disk_free_space=$(df -BG --total | grep total | awk '{print $4}')
+disk_type=$(lsblk -d -o NAME,ROTA | grep -E 'sd|nvme' | awk '{if ($2 == 0) print "SSD"; else print "HDD"}' | head -n 1)
+echo "Disk: $disk_info | Size: ${disk_total_size} GB | Free Space: $disk_free_space | Disk Type: $disk_type"
+
+# Motherboard Information
+motherboard=$(sudo dmidecode -t baseboard | grep -m 1 "Product Name:" | awk -F: '{print $2}' | sed 's/^[ \t]*//')
+echo "Motherboard: $motherboard"
