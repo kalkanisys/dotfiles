@@ -53,8 +53,8 @@ lsblk -b -d -o NAME,SIZE,MODEL,ROTA,TYPE | grep -E 'disk|nvme' | while read -r l
     disk_name=$(echo "$line" | awk '{print $1}')
     disk_size=$(echo "$line" | awk '{print $2}')
     disk_size_gb=$(echo "scale=2; $disk_size / (1024^3)" | bc) # Convert bytes to GB
-    disk_model=$(echo "$line" | awk '{print $3}')
-    disk_rota=$(echo "$line" | awk '{print $4}')
+    disk_model=$(echo "$line" | awk '{print $4}')
+    disk_rota=$(echo "$line" | awk '{print $5}')
     disk_type=$(if [[ "$disk_rota" == "0" ]]; then echo "SSD"; else echo "HDD"; fi)
 
     # Fallback for missing or blank model
