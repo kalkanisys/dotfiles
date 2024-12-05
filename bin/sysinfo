@@ -23,11 +23,8 @@ echo ""
 # CPU hostname, username, and IP address
 hostname=$(hostname)
 username=$(whoami)
-product_name=$(sudo dmidecode -s system-product-name 2>/dev/null)
-vendor_name=$(sudo dmidecode -s system-manufacturer 2>/dev/null)
 ip_address=$(hostname -I | awk '{for (i=1; i<=NF; i++) if ($i ~ /^192\.168/) print $i}')
-echo "Machine: $username@$hostname | IP: $ip_address | Type: $machine_type | Vendor: $vendor_name | Product: $product_name"
-
+echo "Machine: $username@$hostname | IP: $ip_address | Type: $machine_type"
 
 # CPU Information
 cpu_model=$(lscpu | grep "Model name:" | awk -F: '{print $2}' | sed 's/^[ \t]*//')
@@ -68,9 +65,12 @@ lsblk -b -d -o NAME,SIZE,MODEL,ROTA,TYPE | grep -E 'disk|nvme' | while read -r l
     echo "Disk: $disk_name | Size: ${disk_size_gb} GB | Model: ${disk_model:-Unknown} | Type: $disk_type"
 done
 
+product_name=$(sudo dmidecode -s system-product-name 2>/dev/null)
+vendor_name=$(sudo dmidecode -s system-manufacturer 2>/dev/null)
+
 # Motherboard Information
 motherboard=$(sudo dmidecode -t baseboard | grep -m 1 "Product Name:" | awk -F: '{print $2}' | sed 's/^[ \t]*//')
-echo "Motherboard: $motherboard"
+echo "Motherboard: $motherboard | Vendor: $vendor_name | Product: $product_name"
 
 # Calculate Free Space of Root Partition (`/`)
 root_free_space=$(df -BG --output=avail / | tail -1 | tr -d 'G')
