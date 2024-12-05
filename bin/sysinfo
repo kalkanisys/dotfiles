@@ -33,9 +33,9 @@ echo "CPU: $cpu_model | Cores: $cpu_cores | Threads: $((cpu_cores * cpu_threads)
 # RAM Information
 total_ram=$(free -g | grep Mem: | awk '{print $2}')
 ram_model=$(sudo dmidecode --type memory | grep -m 1 "Part Number:" | awk -F: '{print $2}' | sed 's/^[ \t]*//')
-ram_sticks=$(sudo dmidecode --type memory | grep -c "Locator")
+ram_sticks=$(sudo dmidecode --type memory | grep -i "Size:" | grep -v "No Module Installed" | wc -l) # Count only installed sticks
 ram_type=$(sudo dmidecode --type memory | grep -m 1 -A 10 "Memory Device" | grep "Type:" | grep -v "Unknown" | awk -F: '{print $2}' | sed 's/^[ \t]*//')
-ram_speed=$(sudo dmidecode --type memory | grep -m 1 "Configured Clock Speed:" | awk -F: '{print $2}' | sed 's/^[ \t]*//')
+ram_speed=$(sudo dmidecode --type memory | grep -A16 "Memory Device" | grep -i "Speed:" | awk -F: '{print $2}' | grep -Eo '[0-9]+' | sort -u)
 
 echo "RAM: ${total_ram} GB | Model: $ram_model | Count: $ram_sticks | Type: $ram_type | Speed: $ram_speed MHz"
 
@@ -53,15 +53,12 @@ lsblk -b -o NAME,SIZE,MODEL,TYPE,ROTA,MOUNTPOINT | grep -E 'disk|nvme' | while r
     disk_size_gb=$(echo "scale=2; $disk_size / (1024^3)" | bc) # Convert bytes to GB
     disk_model=$(echo "$line" | awk '{print $3}')
     disk_type=$(echo "$line" | awk '{if ($4 == "0") print "SSD"; else print "HDD"}')
-    mount_point=$(echo "$line" | awk '{print $5}')
-    if [[ -z "$mount_point" || "$mount_point" == "-" ]]; then
-        free_space="Not Mounted"
-    else
-        free_space=$(df -BG --output=avail "$mount_point" | tail -1 | tr -d 'G')
-        free_space="${free_space} GB"
-    fi
-    echo "Disk: $disk_name | Size: ${disk_size_gb} GB | Free: $free_space | Model: $disk_model | Type: $disk_type"
+    echo "Disk: $disk_name | Size: ${disk_size_gb} GB | Model: $disk_model | Type: $disk_type"
 done
+
+# Calculate Free Space of Root Partition (`/`)
+root_free_space=$(df -BG --output=avail / | tail -1 | tr -d 'G')
+echo "Free Space: ${root_free_space} GB"
 
 # Motherboard Information
 motherboard=$(sudo dmidecode -t baseboard | grep -m 1 "Product Name:" | awk -F: '{print $2}' | sed 's/^[ \t]*//')
