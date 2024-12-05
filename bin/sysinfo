@@ -34,7 +34,10 @@ echo "CPU: $cpu_model | Cores: $cpu_cores | Threads: $((cpu_cores * cpu_threads)
 total_ram=$(free -g | grep Mem: | awk '{print $2}')
 ram_model=$(sudo dmidecode --type memory | grep -m 1 "Part Number:" | awk -F: '{print $2}' | sed 's/^[ \t]*//')
 ram_sticks=$(sudo dmidecode --type memory | grep -c "Locator")
-echo "RAM: ${total_ram} GB | Model: $ram_model | Count: $ram_sticks"
+ram_type=$(sudo dmidecode --type memory | grep -m 1 -A 10 "Memory Device" | grep "Type:" | grep -v "Unknown" | awk -F: '{print $2}' | sed 's/^[ \t]*//')
+ram_speed=$(sudo dmidecode --type memory | grep -m 1 "Configured Clock Speed:" | awk -F: '{print $2}' | sed 's/^[ \t]*//')
+
+echo "RAM: ${total_ram} GB | Model: $ram_model | Count: $ram_sticks | Type: $ram_type | Speed: $ram_speed MHz"
 
 # Harddisk Information
 # disk_info=$(lsblk -o NAME,SIZE,MODEL,TYPE | grep -E 'disk|nvme' | awk '{print $1 " (" $2 "GB) - " $3}')
@@ -44,20 +47,20 @@ echo "RAM: ${total_ram} GB | Model: $ram_model | Count: $ram_sticks"
 # echo "Disk: $disk_info | Size: ${disk_total_size} GB | Free Space: $disk_free_space | Disk Type: $disk_type"
 
 # Harddisk Information (All Drives)
-lsblk -b -o NAME,SIZE,MODEL,TYPE,ROTA,MOUNTPOINT,FSAVAIL | grep -E 'disk|nvme' | while read -r line; do
-    disk_name=$(echo $line | awk '{print $1}')
-    disk_size=$(echo $line | awk '{print $2}')
+lsblk -b -o NAME,SIZE,MODEL,TYPE,ROTA,MOUNTPOINT | grep -E 'disk|nvme' | while read -r line; do
+    disk_name=$(echo "$line" | awk '{print $1}')
+    disk_size=$(echo "$line" | awk '{print $2}')
     disk_size_gb=$(echo "scale=2; $disk_size / (1024^3)" | bc) # Convert bytes to GB
-    disk_model=$(echo $line | awk '{print $3}')
-    disk_type=$(echo $line | awk '{if ($4 == "0") print "SSD"; else print "HDD"}')
-    mount_point=$(echo $line | awk '{print $5}')
-    free_space=$(echo $line | awk '{print $6}')
-    if [[ -z "$free_space" ]]; then
+    disk_model=$(echo "$line" | awk '{print $3}')
+    disk_type=$(echo "$line" | awk '{if ($4 == "0") print "SSD"; else print "HDD"}')
+    mount_point=$(echo "$line" | awk '{print $5}')
+    if [[ -z "$mount_point" || "$mount_point" == "-" ]]; then
         free_space="Not Mounted"
     else
+        free_space=$(df -BG --output=avail "$mount_point" | tail -1 | tr -d 'G')
         free_space="${free_space} GB"
     fi
-    echo "Disk: $disk_name | Size: ${disk_size_gb} GB | Free: $free_space" GB | Model: $disk_model | Type: $disk_type
+    echo "Disk: $disk_name | Size: ${disk_size_gb} GB | Free: $free_space | Model: $disk_model | Type: $disk_type"
 done
 
 # Motherboard Information
