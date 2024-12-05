@@ -18,6 +18,8 @@ if [[ -z "$machine_type" ]]; then
     machine_type="Unknown"
 fi
 
+echo ""
+
 # CPU hostname, username, and IP address
 hostname=$(hostname)
 username=$(whoami)
@@ -26,10 +28,6 @@ vendor_name=$(sudo dmidecode -s system-manufacturer 2>/dev/null)
 ip_address=$(hostname -I | awk '{for (i=1; i<=NF; i++) if ($i ~ /^192\.168/) print $i}')
 echo "Machine: $username@$hostname | IP: $ip_address | Type: $machine_type | Vendor: $vendor_name | Product: $product_name"
 
-# OS Version and Information
-os_info=$(lsb_release -d | awk -F: '{print $2}' | sed 's/^[ \t]*//')
-kernel_version=$(uname -r)
-echo "OS: $os_info | Kernel: $kernel_version"
 
 # CPU Information
 cpu_model=$(lscpu | grep "Model name:" | awk -F: '{print $2}' | sed 's/^[ \t]*//')
@@ -54,7 +52,7 @@ echo "RAM: ${total_ram} GB | Type: $ram_type | Speed: $ram_speed MHz | Count: $r
 # echo "Disk: $disk_info | Size: ${disk_total_size} GB | Free Space: $disk_free_space | Disk Type: $disk_type"
 
 # Harddisk Information (All Drives)
-lsblk -b -d -o NAME,SIZE,MODEL,ROTA | grep -E 'disk|nvme' | while read -r line; do
+lsblk -b -d -o NAME,SIZE,MODEL,ROTA,TYPE | grep -E 'disk|nvme' | while read -r line; do
     disk_name=$(echo "$line" | awk '{print $1}')
     disk_size=$(echo "$line" | awk '{print $2}')
     disk_size_gb=$(echo "scale=2; $disk_size / (1024^3)" | bc) # Convert bytes to GB
@@ -70,10 +68,16 @@ lsblk -b -d -o NAME,SIZE,MODEL,ROTA | grep -E 'disk|nvme' | while read -r line; 
     echo "Disk: $disk_name | Size: ${disk_size_gb} GB | Model: ${disk_model:-Unknown} | Type: $disk_type"
 done
 
-# Calculate Free Space of Root Partition (`/`)
-root_free_space=$(df -BG --output=avail / | tail -1 | tr -d 'G')
-echo "Free Space: ${root_free_space} GB"
-
 # Motherboard Information
 motherboard=$(sudo dmidecode -t baseboard | grep -m 1 "Product Name:" | awk -F: '{print $2}' | sed 's/^[ \t]*//')
 echo "Motherboard: $motherboard"
+
+# Calculate Free Space of Root Partition (`/`)
+root_free_space=$(df -BG --output=avail / | tail -1 | tr -d 'G')
+
+# OS Version and Information
+os_info=$(lsb_release -d | awk -F: '{print $2}' | sed 's/^[ \t]*//')
+kernel_version=$(uname -r)
+echo "OS: $os_info | Kernel: $kernel_version | Free Space: ${root_free_space} GB"
+
+echo ""
