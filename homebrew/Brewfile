@@ -23,6 +23,7 @@ brew "dive"
 brew "croc"
 brew "zsh-autosuggestions"
 brew "navi"
+brew "yp-dlp"
 
 # From reference: https://github.com/arcticicestudio/igloo
 
@@ -34,6 +35,7 @@ brew "e2fsprogs"
 brew "e2tools"
 brew "ext4fuse"
 # brew "ffmpeg", args: ["with-fdk-aac", "with-fontconfig", "with-freetype", "with-frei0r", "with-libass", "with-libbluray", "with-libgsm", "with-librsvg", "with-libsoxr", "with-libssh", "with-libvidstab", "with-libvorbis", "with-libvpx", "with-opencore-amr", "with-openh264", "with-openjpeg", "with-openssl", "with-opus", "with-rtmpdump", "with-sdl2", "with-speex", "with-srt", "with-theora", "with-tools", "with-wavpack", "with-webp", "with-x265", "with-xz"]
+brew "ffmpeg"
 brew "gpg"
 brew "gzip"
 brew "gnu-sed"
